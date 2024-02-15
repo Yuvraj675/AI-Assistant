@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/ir-black.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css" />
+    <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
+
+    <style>
+        body {
+            scroll-behavior: smooth;
+        }
+
+        .chat-resp pre {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 20px;
+            /* background: #1e1e1e; */
+            background: black;
+            position: relative;
+        }
+
+
+
+
+        .copy-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .codeName {
+            /* position: absolute; */
+            padding: 0px 10px;
+            top: 15px;
+            /* right: 80px; */
+            border: 1px solid white;
+            width: fit-content;
+        }
+
+        .prompt {
+            border: none;
+        }
+
+        .prompt:focus {
+            border: none;
+            outline: none;
+            outline-width: 0;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+        .prompt-submit-btn,
+        .new-chat {
+            padding: 5px 10px;
+            height: fit-content;
+            border: 2px solid #495057;
+            border-radius: 10px;
+            background-color: #212529;
+            width: 40px;
+            font-size: 16px;
+        }
+
+
+        .chat-container {
+            border-bottom: 3px solid #2b3035;
+        }
+
+        .chat-window .chat-container:first-child {
+            margin-top: 4rem !important;
+        }
+
+        .chat-window .chat-container:last-child {
+            margin-bottom: 7rem !important;
+            border-bottom: 0px;
+        }
+
+        .new-chat {
+            color: white;
+
+        }
+
+        .big-box {
+            min-height: calc(100dvh - 96px);
+
+        }
+
+        .starter-container {
+            font-size: 4rem;
+            height: calc(100dvh - 200px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logos {
+
+            display: flex;
+            gap: 4rem;
+        }
+
+        @media (orientation: portrait) {
+            .logos {
+                display: none;
+            }
+
+            .starter-container {
+                font-size: 2rem;
+            }
+        }
+
+        .main-logo {
+            font-size: 10rem;
+        }
+    </style>
+
+</head>
+
+<body data-bs-theme="dark">
+    <nav class="navbar bg-body-tertiary sticky-top d-flex " data-bs-theme="dark">
+        <div class="container-fluid my-1 mx-3">
+            <a class="navbar-brand " href="#">AI Assistant</a>
+            <button class="new-chat" data-toggle="tooltip" data-bs-placement="left" title="New Chat">
+                <i class="fa-regular fa-pen-to-square"></i></button>
+        </div>
+
+    </nav>
+
+    <div class="big-box container">
+        <div class="starter-container">
+            <!-- <p class="fs-1 text-center">Hello There!</p>
+            <p class="fs-1 text-center">Didn't expect you here 🤨</p>
+            <p class="fs-1 text-center">Welcome!</p>
+            <p class="fs-1 text-center">I am an AI assistant</p>
+            <p class="fs-1 text-center">Start a new chat by entering a prompt below</p>
+            <p class="fs-1 text-center">I will try to answer everything</p> -->
+
+            <!-- {% for prompt,responses in messages %}
+            <div class="container border border-5 rounded-3 p-5 my-5 bg-light-subtle">
+                <p class="fs-4">Prompt : {{prompt}}</p>
+                <p class="fs-4">Response : {{responses}}</p>
+            </div>
+            {% endfor %} -->
+            <p class="main-logo"><i class="fa-solid fa-code"></i></p>
+
+            <p class="text-center">How can I help you today?</p>
+            <hr>
+            <div class="logos">
+                <p><i class="fa-solid fa-computer"></i></p>
+                <p><i class="fa-solid fa-icons"></i></p>
+                <p><i class="fa-solid fa-envelope"></i></p>
+                <p><i class="fa-solid fa-guitar"></i></p>
+                <p><i class="fa-solid fa-laptop-code"></i></p>
+                <p><i class="fa-solid fa-book"></i></p>
+                <p><i class="fa-solid fa-gamepad"></i></p>
+            </div>
+
+        </div>
+
+        <div class="chat-window">
+
+        </div>
+    </div>
+    <div class="footer fixed-bottom border-top pt-4 pb-4 text-bg-dark">
+        <div class="container text-bg-dark mb-0">
+            <!-- <div class="row">
+                <div class="col-12">
+                    <div class="inputContainer">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="text" class="form-control prompt p-3" name="prompt"
+                                    placeholder="Enter a message...">
+                            </div>
+                            <div class="col-2 d-flex align-items-center justify-content-end">
+                                <button type="submit" class="prompt-submit-btn" data-toggle="tooltip"
+                                    data-bs-placement="top" title="Send Message"><i
+                                        class="fa-solid fa-arrow-up"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <form action="">
+                <div
+                    class="inputContainer d-flex align-items-center justify-content-end border border-3 rounded-3 px-3">
+                    <input type="text" class="form-control prompt p-3" name="prompt" placeholder="Enter a message...">
+                    <button type="submit" class="prompt-submit-btn" data-toggle="tooltip" data-bs-placement="top"
+                        title="Send Message"><i class="fa-solid fa-arrow-up"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+
+    <script>
+        hljs.highlightAll();
+    </script>
+</body>
+
+
+<script>
+
+    function isPortrait() {
+        var width = $(window).width();
+        var height = $(window).height();
+
+        if (width > height) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    function changeFocus() {
+        const orientation = isPortrait();
+        if (!orientation) {
+            $('.prompt').focus();
+        }
+        else {
+            $('.prompt').blur();
+        }
+    }
+
+    // const validate = () => {
+    //     var flag = true;
+    //     if ($(".prompt").val() == "") {
+    //         flag = false
+    //         $(".prompt").after(`<label class="text-danger text-small">Enter some message!</label>`);
+    //     }
+
+    //     return flag;
+    // }
+    // $(".prompt").change(function () {
+    //     $(this).next('label.text-danger').length && $(this).next('label.text-danger').remove();
+    // });
+
+
+    const getSpinner = () => `<i class="fas fa-spinner fa-pulse"></i>`;
+    const getChatContainer = singlePrompt => {
+        const lastID = $('.chat-container').length > 0 ? Number($('.chat-container').eq($('.chat-container').length - 1).attr('id').split('-')[1]) : 0;
+
+
+        // Convert < to &lt; and > to &gt;
+        singlePrompt = singlePrompt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+
+
+        var containerBody = `
+        <div class="container p-3 my-3 chat-container" id='prompt-${lastID + 1}'>
+                <p class="fs-6 chat-prompt"><b>You</b>:<br>${singlePrompt}</p>
+                <p class="fs-6 chat-resp"><b>Bot</b>:<br> 
+                    <p class = "placeholder-glow loader">
+                        <span class="placeholder col-12"></span>          
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-5"></span>
+                        <span class="placeholder col-7"></span>
+        
+                    </p>
+                </p>
+        </div>
+        `;
+        return [containerBody, lastID + 1];
+    }
+
+    const printPrompt = (prompt) => {
+        let chatContainer = getChatContainer(prompt);
+        $(".chat-window").append(chatContainer[0]);
+        window.scrollTo($('#prompt-' + chatContainer[1]).offset().left, $('#prompt-' + chatContainer[1]).offset().top + $('nav').height());
+    }
+
+
+    const printResponse = (resp) => {
+
+        const lastContainer = $('.chat-container').eq($('.chat-container').length - 1);
+        lastContainer.find(".loader").remove();
+        lastContainer.find('.chat-resp').append(`<p>${resp.resp}<p>`);
+
+        window.scrollTo($(lastContainer).offset().left, $(lastContainer).offset().top - $('nav').height());
+    }
+
+    const addCopyButton = () => {
+        $("pre").append('<button class="copy-button btn btn-outline-light btn-sm" data-toggle="tooltip" data-bs-placement="top" title="Copied!" type = "button" onclick = "copyText(this)"><i class = "fa-solid fa-copy"></i></button>')
+        const copyButtons = $('.copy-button');
+        copyButtons.tooltip({
+            trigger: 'click'
+        })
+    }
+
+
+    function updateCodeName(e) {
+        console.log($(e).parent().find('code'));
+        // const code = $(e).parent().find('code').attr('class');
+        // const codeText = code.split(' ')[0];
+        // console.log(codeText);
+        // $(e).closest('pre').find('.codeName').text(codeText.toUpperCase());
+
+        const code = $(e).parent().find('code').each(function (index, element) {
+            const code = $(this).attr('class');
+            if (code !== undefined) {
+                const codeText = code.split(' ')[0];
+                console.log(codeText);
+                $(this).closest('pre').find('.codeName').text(codeText.toUpperCase());
+            }
+            else {
+                $(this).closest('pre').find('.codeName').text("CONSOLE");
+            }
+
+            hljs.highlightElement(element);
+
+        })
+
+    }
+
+    const addCodeTag = () => {
+        const newElement = $('<p>').addClass('codeName').text('');
+        // $("pre").append('<p class = "codeName"><p>');
+        const element = $('.chat-container').eq($('.chat-container').length - 1).find('pre').prepend(newElement);
+        // const element = $('pre').prepend(newElement);
+
+        updateCodeName(element);
+
+    }
+
+    function copyText(e) {
+        // Get the text content of the parent <pre> object
+        const textToCopy = $(e).closest('pre').find('code').text()
+        console.log(textToCopy)
+        // Copy the text content to the clipboard
+        navigator.clipboard.writeText(textToCopy);
+
+        $(e).html('<i class = "fa fa-check"></i>')
+
+        setTimeout(function () {
+            $(e).html('<i class = "fa-solid fa-copy"></i>')
+            $(e).tooltip('hide');
+        }, 1000)
+
+
+    }
+
+    $(document).ready(function () {
+
+        $('.prompt-submit-btn').attr('disabled', true);
+
+        var sendButtonState = true;
+
+        changeFocus();
+        $('.prompt-submit-btn').tooltip();
+        $('.new-chat').tooltip();
+
+        $('.prompt').keyup(function (e) {
+            if ($('.prompt').val().trim() !== '' && sendButtonState) {
+                // if(sendButtonState)
+                // sendButtonState = true;
+                $('.prompt-submit-btn').attr('disabled', false);
+            }
+            else {
+                // sendButtonState = false;
+                $('.prompt-submit-btn').attr('disabled', true);
+            }
+
+        })
+
+        $('.new-chat').click(function () {
+            Swal.fire({
+                title: "Do you want to start a new chat?",
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Yes",
+                denyButtonText: `No`
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $('.chat-container').remove();
+                    $('.starter-container').removeClass('d-none');
+                    $('.big-box').removeClass().addClass('big-box container');
+                    changeFocus();
+                    $('.prompt').val('')
+
+                }
+            });
+        })
+
+        var converter = new showdown.Converter();
+        $(".prompt-submit-btn").on('click', function (e) {
+            e.preventDefault();
+            // var valid = validate();
+            // if (!valid) {
+            //     return null;
+            // }
+
+            var prompt = $(".prompt");
+            var currentBtnHTML = $(this).html();
+            const origVal = prompt.val();
+            $.ajax({
+                url: './chat',
+                method: 'POST',
+                data: JSON.stringify({ prompt: prompt.val() }),
+                type: 'JSON',
+                dataType: "JSON",
+                contentType: 'application/json',
+                context: this,
+                beforeSend: function () {
+                    $(this).html(getSpinner());
+                    $(this).tooltip('hide');
+                    $(this).tooltip('disable');
+                    $(this).attr('disabled', true);
+                    if (!$(".starter-container").hasClass('d-none')) {
+                        $(".starter-container").addClass('d-none');
+                    }
+
+                    printPrompt(origVal);
+                    sendButtonState = false;
+                    prompt.val("");
+                    changeFocus();
+
+                },
+                success: function (resp) {
+                    resp.resp = converter.makeHtml(resp.resp);
+
+                    printResponse(resp);
+                    $(this).html(currentBtnHTML);
+                    $(this).tooltip('enable');
+
+
+
+                    $('.big-box').removeClass().addClass('big-box container-fluid');
+
+                    addCopyButton();
+                    addCodeTag();
+                    // $(this).attr('disabled', false);
+                    sendButtonState = true;
+
+
+
+                },
+                error: function (err) {
+                    console.log(err);
+                    $(this).html(currentBtnHTML);
+                    $(this).tooltip('enable');
+                    printResponse({ prompt: "", resp: "Sorry, the given prompt couldn't be processed." })
+                    prompt.val(origVal);
+                    sendButtonState = true;
+                    $(this).attr('disabled', false);
+
+
+                }
+            });
+        });
+
+
+    });
+</script>
+
+</html>

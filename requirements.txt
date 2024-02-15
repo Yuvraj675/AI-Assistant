@@ -1,0 +1,5 @@
+wheel
+setuptools
+Flask
+Gunicorn
+google.generativeai
